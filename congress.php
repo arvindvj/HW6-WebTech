@@ -1,5 +1,5 @@
 <?php
-    $tbox=$rad=$drop="";
+    $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$output=$num="";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_POST["tebo"])) 
             $tbox = $_POST["tebo"];
@@ -7,6 +7,15 @@
             $rad = $_POST["SH"];
         if (!empty($_POST["selop"])) 
             $drop = $_POST["selop"];
+        
+        $sun_url = 'http://congress.api.sunlightfoundation.com/'.$drop.'?chamber='.$rad.'&state='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+        $sun_json = file_get_contents($sun_url);
+        $sun_array = json_decode($sun_json,true);
+        $num = (int)$sun_array['count'];
+        if(!$num)
+            $output = "The API returned zero results for the request";
+        else
+            $output = "<table border=1><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
     }
         
 ?>
@@ -41,10 +50,10 @@
         <script>
             var changes = {
                 'Sel' : 'Keyword*',
-                'Legislators' : 'State/Representative*',
-                'Committees' : 'Committee ID*',
-                'Bills' : 'Bill ID*',
-                'Amendments' : 'Amendment ID*'
+                'legislators' : 'State/Representative*',
+                'committees' : 'Committee ID*',
+                'bills' : 'Bill ID*',
+                'amendments' : 'Amendment ID*'
             }
             
             function myFunction() {
@@ -101,13 +110,13 @@
                         <form method="post" name="myform" id="f" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                             <select id="cv" onchange="updatefunc()" name="selop">
                                 <option selected disabled value="Sel">Select your option</option>
-                                <option value="Legislators">Legislators</option> 
-                                <option value="Committees">Committees</option>
-                                <option value="Bills">Bills</option>
-                                <option value="Amendments">Amendments</option>
+                                <option value="legislators">Legislators</option> 
+                                <option value="committees">Committees</option>
+                                <option value="bills">Bills</option>
+                                <option value="amendments">Amendments</option>
                             </select>
-                            <input type="radio" name="SH" checked="checked" value="Senate">Senate  <input type="radio" name="SH" value="House">House
-                            <input type="text" id="tb" name="tebo">
+                            <input type="radio" name="SH" checked="checked" value="senate">Senate  <input type="radio" name="SH" value="house">House
+                            <input type="text" id="tb" name="tebo" value="<?php echo isset($_POST['tebo']) ? $_POST['tebo'] : '' ?>">
                             <input type="submit" value="Search" onclick="validate()">
                             <input type="button" onclick="myFunction()" value="Clear">
                         </form>
@@ -116,9 +125,12 @@
                 <a href="http://sunlightfoundation.com/">Powered by Sunlight Foundation</a>
             </div>
             <?php
-                echo $drop;
-                echo $rad;
-                echo $tbox;
+                error_reporting(E_ERROR | E_PARSE);
+                foreach($sun_array['results'] as $result) {
+                    $output.="<tr><td>".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td>View Details</td></tr>";
+                }
+                $output.="</table>";
+                echo $output;
             ?>
         </center>
     </body>
