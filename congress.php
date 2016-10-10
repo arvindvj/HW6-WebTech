@@ -1,3 +1,15 @@
+<?php
+    $tbox=$rad=$drop="";
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (!empty($_POST["tebo"])) 
+            $tbox = $_POST["tebo"];
+        if (!empty($_POST["SH"])) 
+            $rad = $_POST["SH"];
+        if (!empty($_POST["selop"])) 
+            $drop = $_POST["selop"];
+    }
+        
+?>
 <!DOCTYPE HTML>
 <html>
     <meta http-equiv="content-type" content="text/html; charset=windows-1252">
@@ -37,7 +49,7 @@
             
             function myFunction() {
                 document.getElementById("f").reset();
-                document.getElementById("vc").innerHTML = changes['Sel'];
+                document.getElementById("vc").innerHTML = changes['Sel'];                
             }
             function updatefunc() {
                 var inputBox = document.getElementById("cv");
@@ -67,12 +79,11 @@
                         return false;
                     }
                     else {
-                        alert("Peace");
-                        return false;
+                        return;
                     }
                 }
             }
-</script>
+        </script>
     </head>
     <body>
         <center>
@@ -87,7 +98,7 @@
                 </div>
                 <div id="r">
                     <center>
-                        <form method="post" name="myform" id="f">
+                        <form method="post" name="myform" id="f" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                             <select id="cv" onchange="updatefunc()" name="selop">
                                 <option selected disabled value="Sel">Select your option</option>
                                 <option value="Legislators">Legislators</option> 
@@ -95,16 +106,20 @@
                                 <option value="Bills">Bills</option>
                                 <option value="Amendments">Amendments</option>
                             </select>
-                            <input type="radio" name="SH" checked="checked">Senate  <input type="radio" name="SH">House
+                            <input type="radio" name="SH" checked="checked" value="Senate">Senate  <input type="radio" name="SH" value="House">House
                             <input type="text" id="tb" name="tebo">
-                            <input type="button" value="Search" onclick="validate()">
+                            <input type="submit" value="Search" onclick="validate()">
                             <input type="button" onclick="myFunction()" value="Clear">
                         </form>
                     </center>
                 </div>
                 <a href="http://sunlightfoundation.com/">Powered by Sunlight Foundation</a>
             </div>
-            
+            <?php
+                echo $drop;
+                echo $rad;
+                echo $tbox;
+            ?>
         </center>
     </body>
 </html>
