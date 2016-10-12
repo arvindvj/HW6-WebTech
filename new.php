@@ -3,6 +3,35 @@
     session_cache_limiter(false);
     $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$num=$res=$dets="";
     $output="<br> <br>";
+
+    $statecode=array(
+                'Alabama' => 'AL', 'Montana' => 'MT', 
+                'Alaska' => 'AK', 'Nebraska' => 'NE', 
+                'Arizona' => 'AZ', 'Nevada' => 'NV', 
+                'Arkansas' => 'AR', 'New Hampshire' => 'NH',
+                'California' => 'CA', 'New Jersey' => 'NJ', 
+                'Colorado' => 'CO', 'New Mexico' => 'NM', 
+                'Connecticut' => 'CT', 'New York' => 'NY',
+                'Delaware' => 'DE', 'North Carolina' => 'NC', 
+                'District Of Columbia' => 'DC', 'North Dakota' => 'ND', 
+                'Florida' => 'FL', 'Ohio' => 'OH', 
+                'Georgia' => 'GA', 'Oklahoma' => 'OK', 
+                'Hawaii' => 'HI', 'Oregon' => 'OR', 
+                'Idaho' => 'ID', 'Pennsylvania' => 'PA', 
+                'Illinois' => 'IL', 'Rhode Island' => 'RI', 
+                'Indiana' => 'IN', 'South Carolina' => 'SC', 
+                'Iowa' => 'IA', 'South Dakota' => 'SD', 
+                'Kansas' => 'KS', 'Tennessee' => 'TN', 
+                'Kentucky' => 'KY', 'Texas' => 'TX', 
+                'Louisiana' => 'LA', 'Utah' => 'UT',
+                'Maine' => 'ME', 'Vermont' => 'VT', 
+                'Maryland' => 'MD', 'Virginia' => 'VA', 
+                'Massachusetts' => 'MA', 'Washington' => 'WA', 
+                'Michigan' => 'MI', 'West Virginia' => 'WV', 
+                'Minnesota' => 'MN', 'Wisconsin' => 'WI', 
+                'Mississippi' => 'MS', 'Wyoming' => 'WY', 
+                'Missouri' => 'MO'   );
+
     error_reporting(E_ERROR | E_PARSE);
     session_start();
 
@@ -13,12 +42,23 @@
             if (!empty($_POST["selop"])) { 
                 $drop = $_POST["selop"];
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    
+                    if(strlen($statecode[ucfirst($tbox)])==0)
+                        $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&query='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                    else {
+                        if(strlen($tbox)>2) {
+                            $tbox = $statecode[ucfirst($tbox)];
+                        }
+                        $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                    }
+                    
+                    
                     $_SESSION['drop1']=$drop;
                     $_SESSION['rad1']=$rad;
                     $_SESSION['tbox1']=$tbox;
                     
                     if($drop == "legislators") {
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                        
                         $sun_json = file_get_contents($sun_url);
                         $sun_array = json_decode($sun_json,true);
                         $_SESSION['url1']=$sun_array;
@@ -29,7 +69,7 @@
                             $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
                         
                         foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id'].">View Details</a></td></tr>";
+                            $output.="<tr><td>".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
                         }
                         $output.="</table><br> <br>";
                     }
@@ -101,6 +141,7 @@
             }
         }
         else {
+            $tbox=$_GET['sta'];
             $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&bioguide_id='.$res.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
             $sun_json = file_get_contents($sun_url);
             $dets = json_decode($sun_json,true);
