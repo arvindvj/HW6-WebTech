@@ -3,6 +3,35 @@
     session_cache_limiter(false);
     $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$num=$res=$dets="";
     $output="<br> <br>";
+
+    $statecode=array(
+                'Alabama' => 'AL', 'MT' : 'Montana' => , 
+                'Alaska' => 'AK', 'Nebraska' => 'NE', 
+                'Arizona' => 'AZ', 'Nevada' => 'NV', 
+                'Arkansas' => 'AR', 'New Hampshire' => 'NH',
+                'California' => 'CA', 'New Jersey' => 'NJ', 
+                'Colorado' => 'CO', 'New Mexico' => 'NM', 
+                'Connecticut' => 'CT', 'New York' => 'NY',
+                'Delaware' => 'DE', 'North Carolina' => 'NC', 
+                'District Of Columbia' => 'DC', 'North Dakota' => 'ND', 
+                'Florida' => 'FL', 'Ohio' => 'OH', 
+                'Georgia' => 'GA', 'Oklahoma' => 'OK', 
+                'Hawaii' => 'HI', 'Oregon' => 'OR', 
+                'Idaho' => 'ID', 'Pennsylvania' => 'PA', 
+                'Illinois' => 'IL', 'Rhode Island' => 'RI', 
+                'Indiana' => 'IN', 'South Carolina' => 'SC', 
+                'Iowa' => 'IA', 'South Dakota' => 'SD', 
+                'Kansas' => 'KS', 'Tennessee' => 'TN', 
+                'Kentucky' => 'KY', 'Texas' => 'TX', 
+                'Louisiana' => 'LA', 'Utah' => 'UT',
+                'Maine' => 'ME', 'Vermont' => 'VT', 
+                'Maryland' => 'MD', 'Virginia' => 'VA', 
+                'Massachusetts' => 'MA', 'Washington' => 'WA', 
+                'Michigan' => 'MI', 'West Virginia' => 'WV', 
+                'Minnesota' => 'MN', 'Wisconsin' => 'WI', 
+                'Mississippi' => 'MS', 'Wyoming' => 'WY', 
+                'Missouri' => 'MO'   );
+
     error_reporting(E_ERROR | E_PARSE);
     session_start();
 
@@ -13,6 +42,9 @@
             if (!empty($_POST["selop"])) { 
                 $drop = $_POST["selop"];
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    
+                    
+                    
                     $_SESSION['drop1']=$drop;
                     $_SESSION['rad1']=$rad;
                     $_SESSION['tbox1']=$tbox;
