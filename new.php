@@ -54,13 +54,20 @@
     error_reporting(E_ERROR | E_PARSE);
     session_start();
 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['kill'])) {
+            $_SESSION['drop1']="";
+        $_SESSION['rad1']="";
+        $_SESSION['tbox1']="";
+        }
+        else {
     if (!empty($_POST["tebo"])) {
         $tbox = $_POST["tebo"];
         if (!empty($_POST["SH"])) {
             $rad = $_POST["SH"];
             if (!empty($_POST["selop"])) { 
                 $drop = $_POST["selop"];
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                
                     
                     $ran="";
                     if(strlen($statecode[ucfirst(strtolower($tbox))])==0)
@@ -147,6 +154,7 @@
                 }
             }
         }
+        }
     }
     else {
         
@@ -232,6 +240,10 @@
                 'bills' : 'Bill ID*',
                 'amendments' : 'Amendment ID*'
             }
+            function myFunction() {
+                document.getElementById("f").reset();
+                document.getElementById("vc").innerHTML = changes['Sel'];                
+            }
             function updatefunc() {
                 var inputBox = document.getElementById("cv");
                 var selectedOption = inputBox.options[inputBox.selectedIndex].value;
@@ -289,8 +301,8 @@
                             </select>
                             <label><input type="radio" name="SH" checked="checked" value="senate" <?php $rad=$_SESSION['rad1']; echo ($rad=="senate")?'checked':'' ?>>Senate</label>  <label><input type="radio" name="SH" value="house" <?php $rad=$_SESSION['rad1']; echo ($rad=="house")?'checked':'' ?>>House</label>
                             <input type="text" id="tb" name="tebo" value="<?php $tbox=$_SESSION['tbox1']; echo $tbox; ?>">
-                            <input type="submit" value="Search" onclick="validate()">
-                            <input type="button" onclick="new.php" value="Clear"  >
+                            <input type="submit" value="Search" onclick="validate()" name="keep">
+                            <input type="submit" onclick="myFunction()" value="Clear" name="kill" >
                         </form>
                     </center>
                 </div>
@@ -298,6 +310,7 @@
             </div>
             <?php
                 echo $output;
+                $output="";
             ?>
         </center>
     </body>

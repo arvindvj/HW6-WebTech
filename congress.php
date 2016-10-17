@@ -1,12 +1,6 @@
 <?php
     ini_set('session.cache_limiter','public');
     session_cache_limiter(false);
-    $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$num=$res=$dets=$clear=$cha=$tbo="";
-    $output="<br> <br>";
-
-    //$clear=$_GET['clear'];
-    //if($clear=='clear')
-    //    session_destroy();
 
     $statecode=array(
                 'Alabama' => 'AL', 'Montana' => 'MT', 
@@ -43,18 +37,39 @@
                 'bills' => 'Bill ID*',
                 'amendments' => 'Amendment ID*'
             );
+    
+    $ran=$change['Sel'];
+    //$_SESSION['change1']=$ran;
+    //$ran=$_SESSION['change1'];
+    //echo $ran;
+    $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$num=$res=$dets=$clear=$tbo=$cha="";
+    $output="<br> <br>";
+
+    //$clear=$_GET['clear'];
+    //if($clear=='clear')
+    //    session_destroy();
+
+    
 
     error_reporting(E_ERROR | E_PARSE);
     session_start();
 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['kill'])) {
+            $_SESSION['drop1']="";
+        $_SESSION['rad1']="";
+        $_SESSION['tbox1']="";
+        }
+        else {
     if (!empty($_POST["tebo"])) {
         $tbox = $_POST["tebo"];
         if (!empty($_POST["SH"])) {
             $rad = $_POST["SH"];
             if (!empty($_POST["selop"])) { 
                 $drop = $_POST["selop"];
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                
                     
+                    $ran="";
                     if(strlen($statecode[ucfirst(strtolower($tbox))])==0)
                         $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&query='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
                     else {
@@ -139,8 +154,10 @@
                 }
             }
         }
+        }
     }
     else {
+        
         $res = $_GET['resul'];
         $rad=$_SESSION['rad1'];
         $tbox=$_SESSION['tbox1'];
@@ -149,10 +166,12 @@
             foreach($dets['results'] as $result) {
                 if($result['bill_id']==$res) {
                     $output .= "<div id=\"box\"><br><table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=300px>Bill ID</td><td>".$result['bill_id']."</td></tr><tr><td>Bill Title</td><td>".$result['short_title']."</td></tr><tr><td>Sponsor</td><td>".$result['sponsor']['title']." ".$result['sponsor']['first_name']." ".$result['sponsor']['last_name']."</td></tr><tr><td>Introduced On</td><td>".$result['introduced_on']."</td></tr><tr><td>Last action with date</td><td>".$result['last_version']['version_name']." ".$result['last_action_at']."</td></tr><tr><td>Bill URL</td><td><a href=\"".$result['last_version']['urls']['pdf']."\" target=\"_blank\">".$result['short_title']."</td></tr></table><br></div><br> <br>";
+                    $ran="";
                 }
             }
         }
         else {
+            
             $tbox=$_GET['sta'];
             $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&bioguide_id='.$res.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
             $sun_json = file_get_contents($sun_url);
@@ -161,7 +180,7 @@
                 if($result['bioguide_id']==$res) {
                     $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
                     $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
-                    
+                    $ran="";
                 }
             }
         }
@@ -221,6 +240,10 @@
                 'bills' : 'Bill ID*',
                 'amendments' : 'Amendment ID*'
             }
+            function myFunction() {
+                document.getElementById("f").reset();
+                document.getElementById("vc").innerHTML = changes['Sel'];                
+            }
             function updatefunc() {
                 var inputBox = document.getElementById("cv");
                 var selectedOption = inputBox.options[inputBox.selectedIndex].value;
@@ -235,18 +258,18 @@
                     if (y == null || y == "") {
                         msg += ", Keyword";
                         alert(msg);
-                        return false;
+                        return true;
                     }
                     else {
                         alert(msg);
-                        return false;
+                        return true;
                     }
                 }
                 else {
                     if (y == null || y == "") {
                         msg += "Keyword";
                         alert(msg);
-                        return false;
+                        return true;
                     }
                     else {
                         return;
@@ -263,13 +286,13 @@
                     <center>
                         Congress Database <br>
                         Chamber <br>
-                        <span id="vc" value="Keyword*" <?php $cha=$_SESSION['change1']; echo $cha; ?> ></span> <br>
+                        <label id="vc" value="Keyword*"><?php if($ran==""){$cha=$_SESSION['change1']; echo $cha;} else echo $ran;?></label> <br>
                     </center>
                 </div>
                 <div id="r">
                     <center>
                         <form method="post" name="myform" id="f" action="new.php">
-                            <select id="cv" onchange="congress.php" name="selop" >
+                            <select id="cv" onchange="updatefunc()" name="selop" >
                                 <option selected disabled value="Sel">Select your option</option>
                                 <option value="legislators" <?php $drop=$_SESSION['drop1']; echo ($drop=="legislators")?'selected':'' ?>>Legislators</option> 
                                 <option value="committees" <?php $drop=$_SESSION['drop1']; echo ($drop=="committees")?'selected':'' ?>>Committees</option>
@@ -278,15 +301,16 @@
                             </select>
                             <label><input type="radio" name="SH" checked="checked" value="senate" <?php $rad=$_SESSION['rad1']; echo ($rad=="senate")?'checked':'' ?>>Senate</label>  <label><input type="radio" name="SH" value="house" <?php $rad=$_SESSION['rad1']; echo ($rad=="house")?'checked':'' ?>>House</label>
                             <input type="text" id="tb" name="tebo" value="<?php $tbox=$_SESSION['tbox1']; echo $tbox; ?>">
-                            <input type="submit" value="Search" onclick="validate()">
-                            <input type="button" onclick="new.php" value="Clear"  >
+                            <input type="submit" value="Search" onclick="validate()" name="keep">
+                            <input type="submit" onclick="myFunction()" value="Clear" name="kill" >
                         </form>
                     </center>
                 </div>
-                <a href="http://sunlightfoundation.com/">Powered by Sunlight Foundation</a>
+                <a href="http://sunlightfoundation.com/" target="_blank">Powered by Sunlight Foundation</a>
             </div>
             <?php
                 echo $output;
+                $output="";
             ?>
         </center>
     </body>
