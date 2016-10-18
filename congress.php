@@ -96,7 +96,7 @@
                             $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
                         
                         foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
+                            $output.="<tr><td id=\"tdleft\">".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
                         }
                         $output.="</table><br> <br>";
                     }
