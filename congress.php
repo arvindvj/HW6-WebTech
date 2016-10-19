@@ -39,17 +39,8 @@
             );
     
     $ran=$change['Sel'];
-    //$_SESSION['change1']=$ran;
-    //$ran=$_SESSION['change1'];
-    //echo $ran;
     $tbox=$rad=$drop=$sun_url=$sun_json=$sun_array=$num=$res=$dets=$clear=$tbo=$cha="";
-    $output="<br> <br>";
-
-    //$clear=$_GET['clear'];
-    //if($clear=='clear')
-    //    session_destroy();
-
-    
+    $output="<br>";
 
     error_reporting(E_ERROR | E_PARSE);
     session_start();
@@ -57,138 +48,191 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST['kill'])) {
             $_SESSION['drop1']="";
-        $_SESSION['rad1']="";
-        $_SESSION['tbox1']="";
+            $_SESSION['rad1']="";
+            $_SESSION['tbox1']="";
         }
-        else {
-    if (!empty($_POST["tebo"])) {
-        $tbox = $_POST["tebo"];
-        if (!empty($_POST["SH"])) {
-            $rad = $_POST["SH"];
-            if (!empty($_POST["selop"])) { 
-                $drop = $_POST["selop"];
-                
-                    
-                    $ran="";
-                    if(strlen($statecode[ucfirst(strtolower($tbox))])==0)
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&query='.$tbox.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
-                    else {
-                        if(strlen($tbox)>2) {
-                            $tbo = $statecode[ucfirst(strtolower($tbox))];
-                        }
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbo.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
-                    }
-                    
-                    $_SESSION['change1']=$change[$drop];
-                    $_SESSION['drop1']=$drop;
-                    $_SESSION['rad1']=$rad;
-                    $_SESSION['tbox1']=$tbox;
-                    
-                    if($drop == "legislators") {
-                        
-                        $sun_json = file_get_contents($sun_url);
-                        $sun_array = json_decode($sun_json,true);
-                        $_SESSION['url1']=$sun_array;
-                        $num = (int)$sun_array['count'];
-                        if(!$num)
-                            $output .= "The API returned zero results for the request";
-                        else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
-                        
-                        foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td id=\"tdleft\">".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
-                        }
-                        $output.="</table><br> <br>";
-                    }
-                    
-                    if($drop == "committees") {
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/committees?committee_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
-                        $sun_json = file_get_contents($sun_url);
-                        $sun_array = json_decode($sun_json,true);
-                        $_SESSION['url1']=$sun_array;
-                        $num = (int)$sun_array['count'];
-                        if(!$num)
-                            $output .= "The API returned zero results for the request";
-                        else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Committee ID</th><th>Committee Name</th><th>Chamber</th>";
-                        
-                        foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['committee_id']."</td><td>".$result['name']."</td><td>".$result['chamber']."</td></tr>";
-                        }
-                        $output.="</table><br> <br>";
-                    }
-                    
-                    if($drop == "bills") {
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/bills?bill_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
-                        $sun_json = file_get_contents($sun_url);
-                        $sun_array = json_decode($sun_json,true);
-                        $_SESSION['url1']=$sun_array;
-                        $num = (int)$sun_array['count'];
-                        if(!$num)
-                            $output .= "The API returned zero results for the request";
-                        else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Bill ID</th><th>Short Title</th><th>Chamber</th><th>Details</th>";
-                        
-                        foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['bill_id']."</td><td>".$result['short_title']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bill_id'].">View Details</a></td></tr>";
-                        }
-                        $output.="</table><br> <br>";
-                    }
-                    
-                    if($drop == "amendments") {
-                        $sun_url = 'http://congress.api.sunlightfoundation.com/amendments?amendment_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
-                        $sun_json = file_get_contents($sun_url);
-                        $sun_array = json_decode($sun_json,true);
-                        $_SESSION['url1']=$sun_array;
-                        $num = (int)$sun_array['count'];
-                        if(!$num)
-                            $output .= "The API returned zero results for the request";
-                        else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Amendment ID</th><th>Amendment Type</th><th>Chamber</th><th>Introduced On</th>";
-                        
-                        foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['amendment_id']."</td><td>".$result['amendment_type']."</td><td>".$result['chamber']."</td><td>".$result['introduced_on']."</td></tr>";
-                        }
-                        $output.="</table><br> <br>";
-                    }
-                }
-            }
-        }
-        }
-    }
-    else {
         
-        $res = $_GET['resul'];
-        $rad=$_SESSION['rad1'];
-        $tbox=$_SESSION['tbox1'];
-        if($res==$tbox) {
-            $dets = $_SESSION['url1'];
-            foreach($dets['results'] as $result) {
-                if($result['bill_id']==$res) {
-                    $output .= "<div id=\"box\"><br><table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=300px>Bill ID</td><td>".$result['bill_id']."</td></tr><tr><td>Bill Title</td><td>".$result['short_title']."</td></tr><tr><td>Sponsor</td><td>".$result['sponsor']['title']." ".$result['sponsor']['first_name']." ".$result['sponsor']['last_name']."</td></tr><tr><td>Introduced On</td><td>".$result['introduced_on']."</td></tr><tr><td>Last action with date</td><td>".$result['last_version']['version_name']." ".$result['last_action_at']."</td></tr><tr><td>Bill URL</td><td><a href=\"".$result['last_version']['urls']['pdf']."\" target=\"_blank\">".$result['short_title']."</td></tr></table><br></div><br> <br>";
-                    $ran="";
-                }
-            }
-        }
-        else {
+        else if($_POST["new"]) {
             
-            $tbox=$_GET['sta'];
-            $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&bioguide_id='.$res.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+            $rad=$_SESSION['rad1'];
+            $tbox=$statecode[$_POST['new'][1]];        
+            $bio=$_POST['new'][0];
+            $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbox.'&bioguide_id='.$bio.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
             $sun_json = file_get_contents($sun_url);
             $dets = json_decode($sun_json,true);
             foreach($dets['results'] as $result) {
-                if($result['bioguide_id']==$res) {
-                    $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                    $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                if($result['bioguide_id']==$bio) {
+                    if($result['facebook_id']=="") {
+                        if($result['twitter_id']=="") {
+                            if($result['website']=="") {
+                                $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                                $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                            }
+                            else {
+                                $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                                $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                            }
+                        }
+                        else if($result['website']=="") {
+                            $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                        }
+                        else {
+                            $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                        }
+                    }
+                    else if($result['twitter_id']=="") {
+                        if($result['website']=="") {
+                            $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                        }
+                        else {
+                            $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                        }
+                    }
+                    else if($result['website']=="") {
+                        $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                        $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                    }
+                    else {
+                        $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
+                        $output .= "<table id=\"tab2\"border=0 ><tr><td width=90px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                    }
                     $ran="";
                 }
             }
         }
-        //$_SESSION['drop1']="";
-        //$_SESSION['rad1']="";
-        //$_SESSION['tbox1']="";
+        else if($_POST["newb"]) {
+            $res = $_POST['newb'];
+            $rad=$_SESSION['rad1'];
+            $tbox=$_SESSION['tbox1'];
+            if($res==$tbox) {
+                $dets = $_SESSION['url1'];
+                foreach($dets['results'] as $result) {
+                    if($result['bill_id']==$res) {
+                        $output .= "<div id=\"box\"><br><table id=\"tab3\"border=0 ><tr><td width=300px>Bill ID</td><td>".$result['bill_id']."</td></tr><tr><td>Bill Title</td><td>".$result['short_title']."</td></tr><tr><td>Sponsor</td><td>".$result['sponsor']['title']." ".$result['sponsor']['first_name']." ".$result['sponsor']['last_name']."</td></tr><tr><td>Introduced On</td><td>".$result['introduced_on']."</td></tr><tr><td>Last action with date</td><td>".$result['last_version']['version_name']." ".$result['last_action_at']."</td></tr><tr><td>Bill URL</td><td><a href=\"".$result['last_version']['urls']['pdf']."\" target=\"_blank\">".$result['short_title']."</td></tr></table><br></div><br> <br>";
+                        $ran="";
+                    }
+                }
+            }
+        }
+        else {
+            if (!empty($_POST["tebo"])) {
+                $tbox = trim($_POST["tebo"]);
+                if (!empty($_POST["SH"])) {
+                    $rad = $_POST["SH"];
+                    if (!empty($_POST["selop"])) { 
+                        $drop = $_POST["selop"];
+                            
+                        $ran="";
+                        if(strlen($statecode[ucfirst(strtolower($tbox))])==0) {
+                            $names = explode(" ", $tbox);
+                            if(count($names) >= 2)
+                            {
+                                $first_name = ucfirst(array_shift($names));
+                                $last_name = ucfirst(array_shift($names));
+                                foreach ($names as $n)  
+                                    $last_name = $last_name." ".ucfirst(array_shift($names));                        
+                            }
+                            else {
+                                $tebox=$tbox;
+                            }   
+                            $sun_url = "http://congress.api.sunlightfoundation.com/legislators?chamber=".$rad;
+                            if(isset($first_name))
+                                $sun_url = $sun_url."&first_name=".$first_name;
+                            if(isset($last_name))
+                                $sun_url  = $sun_url."&last_name=".$last_name;
+                            if(isset($tebox))
+                                $sun_url = $sun_url."&query=".$tbox;
+                            $sun_url = $sun_url."&apikey=725651676ce9425d9cea2e39d3c2dc88";  
+                        }
+                        
+                        else {
+                            if(strlen($tbox)>2) {
+                                $tbo = $statecode[ucfirst(strtolower($tbox))];
+                            }
+                            $sun_url = 'http://congress.api.sunlightfoundation.com/legislators?chamber='.$rad.'&state='.$tbo.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                        }
+                    
+                        $_SESSION['change1']=$change[$drop];
+                        $_SESSION['drop1']=$drop;
+                        $_SESSION['rad1']=$rad;
+                        $_SESSION['tbox1']=$tbox;
+                    
+                        if($drop == "legislators") {
+                            $sun_json = file_get_contents($sun_url);
+                            $sun_array = json_decode($sun_json,true);
+                            $_SESSION['url1']=$sun_array;
+                            $num = (int)$sun_array['count'];
+                            if(!$num)
+                                $output .= "The API returned zero results for the request";
+                            else
+                                $output .= "<form method=\"post\" action=congress.php id=\"f2\"><input type=\"hidden\" value=\" \" name=\"new[]\" id='selected_bioguideID' ><input type=\"hidden\" value=\"".$tbox."\" name=\"new[]\" ></form><table id=\"tab1\" border=1 ><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
+                        
+                            foreach($sun_array['results'] as $result) {
+                                $output.="<tr><td id=\"tdleft\">".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href='#' onclick='submitForm(this)'>View Details<input type='hidden' value='".$result['bioguide_id']."'/></a></td></tr>";
+                            }
+                            $output.="</table><br> <br>";
+                        }
+                    
+                        if($drop == "committees") {
+                            $sun_url = 'http://congress.api.sunlightfoundation.com/committees?committee_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                            $sun_json = file_get_contents($sun_url);
+                            $sun_array = json_decode($sun_json,true);
+                            $_SESSION['url1']=$sun_array;
+                            $num = (int)$sun_array['count'];
+                            if(!$num)
+                                $output .= "The API returned zero results for the request";
+                            else
+                                $output .= "<table id=\"tabx\" border=1 ><tr><th>Committee ID</th><th>Committee Name</th><th>Chamber</th>";
+                        
+                            foreach($sun_array['results'] as $result) {
+                                $output.="<tr><td>".$result['committee_id']."</td><td>".$result['name']."</td><td>".$result['chamber']."</td></tr>";
+                            }
+                            $output.="</table><br> <br>";
+                        }
+                    
+                        if($drop == "bills") {
+                            $sun_url = 'http://congress.api.sunlightfoundation.com/bills?bill_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                            $sun_json = file_get_contents($sun_url);
+                            $sun_array = json_decode($sun_json,true);
+                            $_SESSION['url1']=$sun_array;
+                            $num = (int)$sun_array['count'];
+                            
+                            if(!$num)
+                                $output .= "The API returned zero results for the request";
+                            else
+                                $output .= "<table id=\"tabx\" border=1 ><tr><th>Bill ID</th><th>Short Title</th><th>Chamber</th><th>Details</th>";
+                        
+                            foreach($sun_array['results'] as $result) {
+                                $output.="<tr><td>".$result['bill_id']."</td><td>".$result['short_title']."</td><td>".$result['chamber']."</td><td><form method=\"post\" action=congress.php id=\"f3\"><input type=\"hidden\" value=".$result['bill_id']." name=\"newb\" ><a href='#' onclick='submitForm2()'>View Details</a></form></td></tr>";
+                            }
+                            $output.="</table><br> <br>";
+                        }
+                    
+                        if($drop == "amendments") {
+                            $sun_url = 'http://congress.api.sunlightfoundation.com/amendments?amendment_id='.$tbox.'&chamber='.$rad.'&apikey=725651676ce9425d9cea2e39d3c2dc88';
+                            $sun_json = file_get_contents($sun_url);
+                            $sun_array = json_decode($sun_json,true);
+                            $_SESSION['url1']=$sun_array;
+                            $num = (int)$sun_array['count'];
+                            if(!$num)
+                                $output .= "The API returned zero results for the request";
+                            else
+                                $output .= "<table id=\"tabx\" border=1 ><tr><th>Amendment ID</th><th>Amendment Type</th><th>Chamber</th><th>Introduced On</th>";
+                        
+                            foreach($sun_array['results'] as $result) {
+                                $output.="<tr><td>".$result['amendment_id']."</td><td>".$result['amendment_type']."</td><td>".$result['chamber']."</td><td>".$result['introduced_on']."</td></tr>";
+                            }
+                            $output.="</table><br> <br>";
+                        }
+                    }
+                }
+            }
+        }
     }
-
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -201,10 +245,27 @@
                 width: 1000px;
                 text-align: center;
             }
+            #tab1 td:first-child {
+                text-align: left;
+                padding-left: 95px;
+                width: 250px;
+            }
+            #tabx {
+                border-collapse: collapse;
+                width: 1000px;
+                text-align: center;
+            }
+            #tab1 td {
+                text-align: center;
+            }
             #tab2 {
+                width: 600px;
+            }
+            #tab3 {
                 width: 550px;
-                
-                
+            }
+            #tab2 td {
+                padding-left: 100px;
             }
             body {
                 line-height: 150%;
@@ -229,10 +290,25 @@
             }
             #box {
                 border: 1px solid;
-                width: 1000px;
+                width: 800px;
+            }
+            #butt { 
+                background: none;
+                border: none;
+                color: blue;
+                text-decoration: underline;
+                cursor: pointer; 
             }
         </style>
         <script>
+            function submitForm(e) {
+                var myForm = document.getElementById('f2');
+                document.getElementById("selected_bioguideID").value = e.childNodes[1].value;
+                myForm.submit();
+            }
+            function submitForm2() {
+                document.getElementById("f3").submit();
+            }
             var changes = {
                 'Sel' : 'Keyword*',
                 'legislators' : 'State/Representative*',
@@ -258,21 +334,21 @@
                     if (y == null || y == "") {
                         msg += ", Keyword";
                         alert(msg);
-                        return true;
+                        return false;
                     }
                     else {
                         alert(msg);
-                        return true;
+                        return false;
                     }
                 }
                 else {
                     if (y == null || y == "") {
                         msg += "Keyword";
                         alert(msg);
-                        return true;
+                        return false;
                     }
                     else {
-                        return;
+                        return true;
                     }
                 }
             }
@@ -280,7 +356,7 @@
     </head>
     <body>
         <center>
-            <h1>Congress Information Search</h1>
+            <h2>Congress Information Search</h2>
             <div id="maintab">
                 <div id="l">
                     <center>
@@ -291,7 +367,7 @@
                 </div>
                 <div id="r">
                     <center>
-                        <form method="post" name="myform" id="f" action="new.php">
+                        <form method="post" name="myform" id="f" action="congress.php">
                             <select id="cv" onchange="updatefunc()" name="selop" >
                                 <option selected disabled value="Sel">Select your option</option>
                                 <option value="legislators" <?php $drop=$_SESSION['drop1']; echo ($drop=="legislators")?'selected':'' ?>>Legislators</option> 
@@ -301,7 +377,7 @@
                             </select>
                             <label><input type="radio" name="SH" checked="checked" value="senate" <?php $rad=$_SESSION['rad1']; echo ($rad=="senate")?'checked':'' ?>>Senate</label>  <label><input type="radio" name="SH" value="house" <?php $rad=$_SESSION['rad1']; echo ($rad=="house")?'checked':'' ?>>House</label>
                             <input type="text" id="tb" name="tebo" value="<?php $tbox=$_SESSION['tbox1']; echo $tbox; ?>">
-                            <input type="submit" value="Search" onclick="validate()" name="keep">
+                            <input type="submit" value="Search" onclick="return validate()" name="keep">
                             <input type="submit" onclick="myFunction()" value="Clear" name="kill" >
                         </form>
                     </center>

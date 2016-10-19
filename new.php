@@ -93,10 +93,10 @@
                         if(!$num)
                             $output .= "The API returned zero results for the request";
                         else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
+                            $output .= "<table id=\"tab1\" border=1 ><tr><th>Name</th><th>State</th><th>Chamber</th><th>Details</th></tr>";
                         
                         foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td id=\"tdleft\">".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
+                            $output.="<tr><td id=\"tdleft\">".$result['first_name']." ".$result['last_name']."</td><td>".$result['state_name']."</td><td>".$result['chamber']."</td><td><a href=congress.php?resul=".$result['bioguide_id']."&sta=".$result[$statecode['state_name']].">View Details</a></td></tr>";
                         }
                         $output.="</table><br> <br>";
                     }
@@ -110,7 +110,7 @@
                         if(!$num)
                             $output .= "The API returned zero results for the request";
                         else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Committee ID</th><th>Committee Name</th><th>Chamber</th>";
+                            $output .= "<table id=\"tab1\" border=1 ><tr><th>Committee ID</th><th>Committee Name</th><th>Chamber</th>";
                         
                         foreach($sun_array['results'] as $result) {
                             $output.="<tr><td>".$result['committee_id']."</td><td>".$result['name']."</td><td>".$result['chamber']."</td></tr>";
@@ -127,10 +127,10 @@
                         if(!$num)
                             $output .= "The API returned zero results for the request";
                         else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Bill ID</th><th>Short Title</th><th>Chamber</th><th>Details</th>";
+                            $output .= "<table id=\"tab1\" border=1 ><tr><th>Bill ID</th><th>Short Title</th><th>Chamber</th><th>Details</th>";
                         
                         foreach($sun_array['results'] as $result) {
-                            $output.="<tr><td>".$result['bill_id']."</td><td>".$result['short_title']."</td><td>".$result['chamber']."</td><td><a href=new.php?resul=".$result['bill_id'].">View Details</a></td></tr>";
+                            $output.="<tr><td>".$result['bill_id']."</td><td>".$result['short_title']."</td><td>".$result['chamber']."</td><td><a href=congress.php?resul=".$result['bill_id'].">View Details</a></td></tr>";
                         }
                         $output.="</table><br> <br>";
                     }
@@ -144,7 +144,7 @@
                         if(!$num)
                             $output .= "The API returned zero results for the request";
                         else
-                            $output .= "<table id=\"tab1\" border=1 cellpadding=\"5\"><tr><th>Amendment ID</th><th>Amendment Type</th><th>Chamber</th><th>Introduced On</th>";
+                            $output .= "<table id=\"tab1\" border=1 ><tr><th>Amendment ID</th><th>Amendment Type</th><th>Chamber</th><th>Introduced On</th>";
                         
                         foreach($sun_array['results'] as $result) {
                             $output.="<tr><td>".$result['amendment_id']."</td><td>".$result['amendment_type']."</td><td>".$result['chamber']."</td><td>".$result['introduced_on']."</td></tr>";
@@ -165,7 +165,10 @@
             $dets = $_SESSION['url1'];
             foreach($dets['results'] as $result) {
                 if($result['bill_id']==$res) {
-                    $output .= "<div id=\"box\"><br><table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=300px>Bill ID</td><td>".$result['bill_id']."</td></tr><tr><td>Bill Title</td><td>".$result['short_title']."</td></tr><tr><td>Sponsor</td><td>".$result['sponsor']['title']." ".$result['sponsor']['first_name']." ".$result['sponsor']['last_name']."</td></tr><tr><td>Introduced On</td><td>".$result['introduced_on']."</td></tr><tr><td>Last action with date</td><td>".$result['last_version']['version_name']." ".$result['last_action_at']."</td></tr><tr><td>Bill URL</td><td><a href=\"".$result['last_version']['urls']['pdf']."\" target=\"_blank\">".$result['short_title']."</td></tr></table><br></div><br> <br>";
+                    if($res=="") 
+                        $output="";
+                    else
+                        $output .= "<div id=\"box\"><br><table id=\"tab2\"border=0 ><tr><td width=300px>Bill ID</td><td>".$result['bill_id']."</td></tr><tr><td>Bill Title</td><td>".$result['short_title']."</td></tr><tr><td>Sponsor</td><td>".$result['sponsor']['title']." ".$result['sponsor']['first_name']." ".$result['sponsor']['last_name']."</td></tr><tr><td>Introduced On</td><td>".$result['introduced_on']."</td></tr><tr><td>Last action with date</td><td>".$result['last_version']['version_name']." ".$result['last_action_at']."</td></tr><tr><td>Bill URL</td><td><a href=\"".$result['last_version']['urls']['pdf']."\" target=\"_blank\">".$result['short_title']."</td></tr></table><br></div><br> <br>";
                     $ran="";
                 }
             }
@@ -182,39 +185,39 @@
                         if($result['twitter_id']=="") {
                             if($result['website']=="") {
                                 $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                                $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                                $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
                             }
                             else {
                                 $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                                $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                                $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
                             }
                         }
                         else if($result['website']=="") {
                             $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                            $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
                         }
                         else {
                             $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                            $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td>N/A</td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
                         }
                     }
                     else if($result['twitter_id']=="") {
                         if($result['website']=="") {
                             $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                            $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
                         }
                         else {
                             $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                            $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
+                            $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td>N/A</td></tr></table><br></div><br> <br>";
                         }
                     }
                     else if($result['website']=="") {
                         $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                        $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                        $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td>N/A</td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
                     }
                     else {
                         $output .= "<div id=\"box\"><br><img src=\"https://theunitedstates.io/images/congress/225x275/".$result['bioguide_id'].".jpg\"> <br>";
-                        $output .= "<table id=\"tab2\"border=0 cellpadding=\"5\"><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
+                        $output .= "<table id=\"tab2\"border=0 ><tr><td width=250px>Full Name</td><td>".$result['title']." ".$result['first_name']." ".$result['last_name']."</td></tr><tr><td>Term Ends on</td><td>".$result['term_end']."</td></tr><tr><td>Website</td><td><a href=\"".$result['website']."\" target=\"_blank\">".$result['website']."</a></td></tr><tr><td>Office</td><td>".$result['office']."</td></tr><tr><td>Facebook</td><td><a href=\"https://www.facebook.com/".$result['facebook_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr><tr><td>Twitter</td><td><a href=\"https://twitter.com/".$result['twitter_id']."\" target=\"_blank\">".$result['first_name']." ".$result['last_name']."</a></td></tr></table><br></div><br> <br>";
                     }
                     $ran="";
                 }
@@ -235,6 +238,14 @@
             #tab1 {
                 border-collapse: collapse;
                 width: 1000px;
+                text-align: center;
+            }
+            #tab1 td:first-child {
+                text-align: left;
+                padding-left: 95px;
+                width: 250px;
+            }
+            #tab1 td {
                 text-align: center;
             }
             #tab2 {
@@ -325,7 +336,7 @@
                 </div>
                 <div id="r">
                     <center>
-                        <form method="post" name="myform" id="f" action="new.php">
+                        <form method="post" name="myform" id="f" action="congress.php">
                             <select id="cv" onchange="updatefunc()" name="selop" >
                                 <option selected disabled value="Sel">Select your option</option>
                                 <option value="legislators" <?php $drop=$_SESSION['drop1']; echo ($drop=="legislators")?'selected':'' ?>>Legislators</option> 
