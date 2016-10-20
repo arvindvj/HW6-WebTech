@@ -134,7 +134,8 @@
                                 $first_name = ucfirst(array_shift($names));
                                 $last_name = ucfirst(array_shift($names));
                                 foreach ($names as $n)  
-                                    $last_name = $last_name." ".ucfirst(array_shift($names));                        
+                                    $last_name = $last_name." ".ucfirst(array_shift($names)); 
+                                $tebox=$last_name;
                             }
                             else {
                                 $tebox=$tbox;
@@ -143,9 +144,9 @@
                             if(isset($first_name))
                                 $sun_url = $sun_url."&first_name=".$first_name;
                             if(isset($last_name))
-                                $sun_url  = $sun_url."&last_name=".$last_name;
+                                $sun_url  = $sun_url."&last_name=".urlencode($last_name);
                             if(isset($tebox))
-                                $sun_url = $sun_url."&query=".$tbox;
+                                $sun_url = $sun_url."&query=".urlencode($tebox);
                             $sun_url = $sun_url."&apikey=725651676ce9425d9cea2e39d3c2dc88";  
                         }
                         
